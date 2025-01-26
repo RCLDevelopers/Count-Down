@@ -2,15 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coming Soon - eLearning Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Coming Soon</title>
     <style>
         body, html {
             height: 100%;
             margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(45deg, #1a1a1a, #2a2a2a);
             color: #ffffff;
+            overflow: hidden;
         }
         .container {
             display: flex;
@@ -19,30 +20,107 @@
             align-items: center;
             height: 100%;
             text-align: center;
+            animation: fadeIn 1.5s ease-out;
         }
         h1 {
-            font-size: 3rem;
+            font-size: 3.5rem;
             margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: slideDown 1s ease-out;
         }
         p {
             font-size: 1.2rem;
             margin-bottom: 2rem;
+            opacity: 0;
+            animation: slideUp 1s ease-out 0.5s forwards;
         }
         .cta {
-            background-color: #0f7c12;
+            background: linear-gradient(45deg, #0f7c12, #15a619);
             color: white;
-            padding: 10px 20px;
+            padding: 15px 30px;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 25px;
             font-weight: bold;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(15, 124, 18, 0.2);
+            opacity: 0;
+            animation: fadeIn 1s ease-out 1s forwards;
         }
         .cta:hover {
-            background-color: #d60303;
+            background: linear-gradient(45deg, #d60303, #ff0404);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(214, 3, 3, 0.3);
         }
         #countdown {
-            font-size: 2rem;
+            display: flex;
+            gap: 20px;
+            font-size: 1.5rem;
             margin-top: 2rem;
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            animation: fadeIn 1s ease-out 1.5s forwards, float 3s ease-in-out infinite;
+        }
+
+        .time-segment {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 80px;
+        }
+
+        .time-number {
+            font-size: 3rem;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px;
+            border-radius: 8px;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .time-label {
+            font-size: 1rem;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Add floating animation to countdown */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
         }
     </style>
 </head>
@@ -50,21 +128,40 @@
     <div class="container">
         <h1>We'll Be Back Soon!</h1>
         <p>Our team is working hard to bring you amazing eLearning Web App.</p>
-        <a href="https://mata.africa/" class="cta">eLearning Portal</a>
+        <a href="#" class="cta">eLearning Portal</a>
         <div id="countdown"></div>
     </div>
 
     <script>
         function updateCountdown() {
             const now = new Date();
-            const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-            const distance = tomorrow - now;
+            
+            // Calculate next 6-hour interval
+            const hoursInMillis = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
+            const nextInterval = Math.ceil(now.getTime() / hoursInMillis) * hoursInMillis;
+            const distance = nextInterval - now.getTime();
 
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            document.getElementById("countdown").innerHTML = `Next update in: ${hours}h ${minutes}m ${seconds}s`;
+            // Add leading zeros for better formatting
+            const formatNumber = (num) => num.toString().padStart(2, '0');
+            
+            document.getElementById("countdown").innerHTML = `
+                <div class="time-segment">
+                    <div class="time-number">${formatNumber(hours)}</div>
+                    <div class="time-label">Hours</div>
+                </div>
+                <div class="time-segment">
+                    <div class="time-number">${formatNumber(minutes)}</div>
+                    <div class="time-label">Minutes</div>
+                </div>
+                <div class="time-segment">
+                    <div class="time-number">${formatNumber(seconds)}</div>
+                    <div class="time-label">Seconds</div>
+                </div>
+            `;
         }
 
         // Update the countdown every 1 second
